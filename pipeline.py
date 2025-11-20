@@ -8,6 +8,7 @@ import json
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
+from sklearn.svm import LinearSVC
 from sklearn.metrics import classification_report, accuracy_score
 
 def load_kaggle():
@@ -162,6 +163,17 @@ def train_logreg(X_train, y_train, max_features=5000, ngram_range=(1, 2), max_it
     
     # Train model
     model = LogisticRegression(max_iter=max_iter)
+    model.fit(X_train_tfidf, y_train)
+    
+    return model, vectorizer
+
+def train_svm(X_train, y_train, max_features=5000, ngram_range=(1, 2), max_iter=1000, C=1.0):
+    # Vectorize text
+    vectorizer = TfidfVectorizer(max_features=max_features, ngram_range=ngram_range)
+    X_train_tfidf = vectorizer.fit_transform(X_train)
+    
+    # Train model
+    model = LinearSVC(max_iter=max_iter, C=C, random_state=42)
     model.fit(X_train_tfidf, y_train)
     
     return model, vectorizer
