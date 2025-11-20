@@ -3,6 +3,8 @@ import re
 import kagglehub
 import os
 import contractions
+from pathlib import Path
+import json
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
@@ -25,6 +27,111 @@ def load_kaggle():
     
     return df.copy()
 
+def combine_politifact(
+    fake_path: str = "datasets/politifact/politifact_fake.csv",
+    real_path: str = "datasets/politifact/politifact_real.csv",
+    out_path: str = "datasets/processed/politifact_combined.csv",
+):
+    """
+    Combine politifact_fake.csv and politifact_real.csv into one CSV
+    with a binary label column: 0 = fake, 1 = real.
+    Any existing columns are preserved.
+    """
+
+    if not os.path.exists(fake_path):
+        raise FileNotFoundError(f"Fake CSV not found at: {fake_path}")
+    if not os.path.exists(real_path):
+        raise FileNotFoundError(f"Real CSV not found at: {real_path}")
+
+    # Load CSVs
+    fake_df = pd.read_csv(fake_path)
+    real_df = pd.read_csv(real_path)
+
+    # Add / override label column
+    fake_df["label"] = 0   # 0 = fake
+    real_df["label"] = 1   # 1 = real
+
+    # Combine
+    combined = pd.concat([fake_df, real_df], ignore_index=True)
+
+    # Save
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    combined.to_csv(out_path, index=False)
+
+    print(f"Saved combined Politifact dataset to: {out_path}")
+    print("Shape:", combined.shape)
+
+def append_text_column(csv_path, dataset_type):
+    """
+    Append 'text' column to CSV by reading from corresponding JSON files.
+    
+    Args:
+        csv_path: Path to the CSV file
+        dataset_type: Either 'fake' or 'real'
+    """
+    # Read the CSV
+    print(f"Reading {csv_path}...")
+    df = pd.read_csv(csv_path)
+    
+    # Get the base directory for datasets
+    base_dir = Path(csv_path).parent
+    json_base_dir = base_dir / "politifact" / dataset_type
+    
+    # List to store text values
+    texts = []
+    missing_count = 0
+    
+    # Process each row
+    for idx, row in df.iterrows():
+        news_id = row['id']
+        json_path = json_base_dir / news_id / "news content.json"
+        
+        try:
+            if json_path.exists():
+                with open(json_path, 'r', encoding='utf-8') as f:
+                    json_data = json.load(f)
+                    text = json_data.get('text', '')
+                    texts.append(text)
+            else:
+                print(f"Warning: JSON file not found for {news_id}: {json_path}")
+                texts.append('')
+                missing_count += 1
+        except Exception as e:
+            print(f"Error reading JSON for {news_id}: {e}")
+            texts.append('')
+            missing_count += 1
+    
+    # Add the text column
+    df['text'] = texts
+    
+    # Save the updated CSV
+    output_path = csv_path
+    df.to_csv(output_path, index=False)
+    print(f"Updated {csv_path} with 'text' column")
+    print(f"Total rows: {len(df)}, Missing text: {missing_count}")
+    print()
+
+if __name__ == "__main__":
+    # Get the datasets directory
+    script_dir = Path(__file__).parent
+    datasets_dir = script_dir / "datasets"
+    
+    # Process fake CSV
+    fake_csv = datasets_dir / "politifact_fake.csv"
+    if fake_csv.exists():
+        append_text_column(fake_csv, "fake")
+    else:
+        print(f"Warning: {fake_csv} not found")
+    
+    # Process real CSV
+    real_csv = datasets_dir / "politifact_real.csv"
+    if real_csv.exists():
+        append_text_column(real_csv, "real")
+    else:
+        print(f"Warning: {real_csv} not found")
+    
+    print("Done!")
+
 def clean_text(text):
     text = text.lower()  # lowercase everything
     text = contractions.fix(text)  # expand contractions (ie couldn't --> could not)
@@ -33,14 +140,16 @@ def clean_text(text):
     text = re.sub(r"\s+", " ", text).strip()  # remove extra whitespace
     return text
 
-def clean_kaggle(df):
+def clean_dataset(df):
     df = df.copy()
-    # Clean text
-    df["text"] = df["text"].apply(clean_text)
-    
-    # Deduplicate
+    # remove duplicates and empty
     df = df.drop_duplicates(subset=["text"])
-    
+    df = df.dropna(subset=["text", "text"])
+
+    #Clean title and text
+    df["title"] = df["title"].apply(clean_text)
+    df["text"] = df["text"].apply(clean_text)
+
     # Shuffle
     df = df.sample(frac=1).reset_index(drop=True)
     
