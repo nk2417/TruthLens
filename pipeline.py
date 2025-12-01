@@ -146,7 +146,15 @@ def clean_dataset(df):
     df = df.copy()
     # remove duplicates and empty
     df = df.drop_duplicates(subset=["text"])
-    df = df.dropna(subset=["text", "text"])
+    df = df.dropna(subset=["title", "text"])
+
+     # cast to string just in case
+    df["title"] = df["title"].astype(str)
+    df["text"]  = df["text"].astype(str)
+    
+    # drop empty / whitespace-only title/text
+    df = df[df["title"].str.strip() != ""]
+    df = df[df["text"].str.strip() != ""]
 
     #Clean title and text
     df["title"] = df["title"].apply(clean_text)
@@ -163,7 +171,7 @@ def train_logreg(X_train, y_train, max_features=5000, ngram_range=(1, 2), max_it
     X_train_tfidf = vectorizer.fit_transform(X_train)
     
     # Train model
-    model = LogisticRegression(max_iter=max_iter)
+    model = LogisticRegression(max_iter=max_iter, class_weight="balanced", random_state=42)
     model.fit(X_train_tfidf, y_train)
     
     return model, vectorizer
