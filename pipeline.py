@@ -29,6 +29,57 @@ def load_kaggle():
     
     return df.copy()
 
+def load_politifact():
+    combined_path = "data_files/processed/politifact_combined.csv"
+    
+    # check if combined dataset exists
+    if os.path.exists(combined_path):
+        print(f"Loading PolitiFact from: {combined_path}")
+        df = pd.read_csv(combined_path)
+        return df.copy()
+    
+    print("PolitiFact combined file not found. Attempting to combine datasets...")
+    fake_path = "datasets/politifact/politifact_fake.csv"
+    real_path = "datasets/politifact/politifact_real.csv"
+    
+    # if not, try to combine files
+    try:
+        combine_dataset(fake_path, real_path, combined_path)
+        df = pd.read_csv(combined_path)
+        return df.copy()
+    except FileNotFoundError as e:
+        print(f" Error loading PolitiFact: {e}")
+        print("   Please make sure the following files exist:")
+        print(f"   - {fake_path}")
+        print(f"   - {real_path}")
+        return None
+
+
+def load_gossipcop():
+    combined_path = "data_files/processed/gossipcop_combined.csv"
+    
+    # check if combined dataset exists
+    if os.path.exists(combined_path):
+        print(f"Loading GossipCop from: {combined_path}")
+        df = pd.read_csv(combined_path)
+        return df.copy()
+    
+    # if not, try to combine the files
+    print("GossipCop combined file not found. Attempting to combine datasets...")
+    fake_path = "datasets/gossipcop/gossipcop_fake.csv"
+    real_path = "datasets/gossipcop/gossipcop_real.csv"
+    
+    try:
+        combine_dataset(fake_path, real_path, combined_path)
+        df = pd.read_csv(combined_path)
+        return df.copy()
+    except FileNotFoundError as e:
+        print(f" Error loading GossipCop: {e}")
+        print("   Please make sure the following files exist:")
+        print(f"   - {fake_path}")
+        print(f"   - {real_path}")
+        return None
+
 def combine_dataset(
     fake_path: str = "datasets/politifact/politifact_fake.csv",
     real_path: str = "datasets/politifact/politifact_real.csv",
