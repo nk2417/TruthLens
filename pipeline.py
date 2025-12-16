@@ -80,11 +80,7 @@ def load_gossipcop():
         print(f"   - {real_path}")
         return None
 
-def combine_dataset(
-    fake_path: str = "datasets/politifact/politifact_fake.csv",
-    real_path: str = "datasets/politifact/politifact_real.csv",
-    out_path: str = "datasets/processed/politifact_combined.csv",
-):
+def combine_dataset(fake_path, real_path, out_path):
     """
     Combine datasets into one CSV
     with a binary label column: 0 = fake, 1 = real.
