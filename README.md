@@ -19,3 +19,16 @@
     - `distilbertModel.ipynb` , `LSTMmodel.ipynb` — DistilBERT and LSTM experiments and results
     - `gossipCopModel.ipynb`, `kaggleModel.ipynb`, `politifactModel.ipynb` — Dataset-specific experiments and evaluation harnesses for each dataset.
 - All trained baseline models and vectorizers are saved inside the joblist/ folder (trained on the Kaggle dataset)
+
+Contributions
+- Steven Wu
+    - Implemented the end-to-end data preprocessing pipeline (pipeline.py)
+    Developed Logistic Regression models for Kaggle, PolitiFact, and GossipCop (kaggleModel.ipynb, politifactModel.ipynb, gossipCopModel.ipynb)
+    - Implemented the LSTM classifier (LSTMmodel.ipynb)
+    - Led overall project setup and created GitHub repository 
+- Noah Kang
+    - Implemented Support Vector Machine (SVM) models for Kaggle, PolitiFact, and GossipCop (kaggleModel.ipynb, politifactModel.ipynb, gossipCopModel.ipynb)
+    - Developed classical machine learning experiments for mixed-dataset training(mixedDatasetClassicalML)
+- Irene Kim
+    - Implemented Naive Bayes models for Kaggle, PolitiFact, and GossipCop (kaggleModel.ipynb, politifactModel.ipynb, gossipCopModel.ipynb)
+    - Implemented and fine-tuned the DistilBERT model (distilbertModel.ipynb)
