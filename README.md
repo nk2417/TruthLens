@@ -23,7 +23,7 @@
 Contributions
 - Steven Wu
     - Implemented the end-to-end data preprocessing pipeline (pipeline.py)
-    Developed Logistic Regression models for Kaggle, PolitiFact, and GossipCop (kaggleModel.ipynb, politifactModel.ipynb, gossipCopModel.ipynb)
+    - Developed Logistic Regression models for Kaggle, PolitiFact, and GossipCop (kaggleModel.ipynb, politifactModel.ipynb, gossipCopModel.ipynb)
     - Implemented the LSTM classifier (LSTMmodel.ipynb)
     - Led overall project setup and created GitHub repository 
 - Noah Kang
