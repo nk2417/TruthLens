@@ -1,4 +1,8 @@
-# RealFakeNewsDetector
+# TruthLens
+
+TruthLens is a team-built system for fake news classification, evaluated across multiple datasets to test robustness under domain shift.
+
+**Original team repository:** https://github.com/22stevenwu/RealFakeNewsDetector 
 
 - To create a virtual environment, run "python3 -m venv venv", then activate it by running "source/venv/bins/activate"
     - Then run: "pip install -r requirements.txt" to download all dependencies
@@ -20,15 +24,9 @@
     - `gossipCopModel.ipynb`, `kaggleModel.ipynb`, `politifactModel.ipynb` — Dataset-specific experiments and evaluation harnesses for each dataset.
 - All trained baseline models and vectorizers are saved inside the joblist/ folder (trained on the Kaggle dataset)
 
-Contributions
-- Steven Wu
-    - Implemented the end-to-end data preprocessing pipeline (pipeline.py)
-    - Developed Logistic Regression models for Kaggle, PolitiFact, and GossipCop (kaggleModel.ipynb, politifactModel.ipynb, gossipCopModel.ipynb)
-    - Implemented the LSTM classifier (LSTMmodel.ipynb)
-    - Led overall project setup and created GitHub repository 
+---
+
 - Noah Kang
     - Implemented Support Vector Machine (SVM) models for Kaggle, PolitiFact, and GossipCop (kaggleModel.ipynb, politifactModel.ipynb, gossipCopModel.ipynb)
+    - Ran SVM hyperparameter tuning and feature experiments
     - Developed classical machine learning experiments for mixed-dataset training(mixedDatasetClassicalML)
-- Irene Kim
-    - Implemented Naive Bayes models for Kaggle, PolitiFact, and GossipCop (kaggleModel.ipynb, politifactModel.ipynb, gossipCopModel.ipynb)
-    - Implemented and fine-tuned the DistilBERT model (distilbertModel.ipynb)
