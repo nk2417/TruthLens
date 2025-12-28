@@ -26,7 +26,7 @@ TruthLens is a team-built system for fake news classification, evaluated across 
 
 ---
 
-- Noah Kang
-    - Implemented Support Vector Machine (SVM) models for Kaggle, PolitiFact, and GossipCop (kaggleModel.ipynb, politifactModel.ipynb, gossipCopModel.ipynb)
-    - Ran SVM hyperparameter tuning and feature experiments
-    - Developed classical machine learning experiments for mixed-dataset training(mixedDatasetClassicalML)
+## My Contributions
+- Implemented Support Vector Machine (SVM) models for Kaggle, PolitiFact, and GossipCop (kaggleModel.ipynb, politifactModel.ipynb, gossipCopModel.ipynb)
+- Ran SVM hyperparameter tuning and feature experiments
+- Developed classical machine learning experiments for mixed-dataset training(mixedDatasetClassicalML)
